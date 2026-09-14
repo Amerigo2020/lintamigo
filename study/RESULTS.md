@@ -1,20 +1,26 @@
-# State of agent instruction files
+# Automated scan of agent instruction files
 
-Generated 2026-09-02T22:54:27.103Z.
+Report written: 2026-09-02T22:54:27.103Z. This timestamp does not establish when each repository was scanned.
+
+This report counts automated linter findings with no recorded manual validation. A flag is not a confirmed defect, and this selected sample does not estimate the prevalence of defects across GitHub. See [methodology and limitations](METHODOLOGY.md).
 
 | Metric | Result |
 | --- | ---: |
 | Repositories analysed | 100 |
 | Repositories that failed | 0 |
-| Repositories with any error | 73.0% (73/100) |
-| Repositories with stale-path errors | 66.0% (66/100) |
-| Repositories with stale-script errors | 38.0% (38/100) |
-| Secret-leak findings | 1.0% (1/100) |
-| Median approximate tokens per repository | ≈7323 |
+| Repositories with at least one error-level finding | 73.0% (73/100) |
+| Repositories with an error-level stale-path finding | 66.0% (66/100) |
+| Repositories with an error-level stale-script finding | 38.0% (38/100) |
+| Repositories with a credential-pattern finding | 1.0% (1/100) |
+| Median approximate tokens across all discovered instructions per repository | ≈7323 |
 
-Secret-leak results are aggregate-only; repository names are never recorded alongside them.
+Credential-pattern findings are aggregate-only; repository names and credential values are not recorded alongside them. A match does not establish that a credential was real, active, or usable.
+
+The saved data does not capture repository commit SHAs, the linter version, star counts, or the original search response. By default, the study runner bypasses repository-specific amigolint configuration, so intentional examples or test fixtures can contribute findings.
 
 ## Most common rule codes
+
+This table includes every reported severity, not just error-level findings. Counts do not represent confirmed defects.
 
 | Code | Rule | Findings |
 | --- | --- | ---: |
@@ -28,3 +34,7 @@ Secret-leak results are aggregate-only; repository names are never recorded alon
 | AL005 | token-budget | 108 |
 | AL003 | broken-import | 94 |
 | AL009 | vague-rule | 89 |
+
+## Rerunning the study
+
+`pnpm study` resumes saved records; it does not rescan completed repositories. Even a run with no pending repositories refreshes the report timestamp. A fresh run scans current default branches and cannot reproduce this historical snapshot exactly without the missing source revisions and linter version. See [methodology and limitations](METHODOLOGY.md).

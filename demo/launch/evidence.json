@@ -1,0 +1,57 @@
+{
+  "provenance": "Deliberately constructed minimal reproduction, not a repo audit",
+  "version": "0.1.0",
+  "cliSha256": "57adcf6dc809df5e08a24b6ef8d4a06f9bcff42ebd578da4deab46dd89043411",
+  "before": {
+    "status": 1,
+    "report": {
+      "version": "0.1.0",
+      "root": "<temporary-demo-project>",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "agent": "codex",
+          "approxTokens": 14
+        }
+      ],
+      "findings": [
+        {
+          "rule": "stale-script",
+          "code": "AL002",
+          "severity": "error",
+          "file": "AGENTS.md",
+          "line": 1,
+          "col": 11,
+          "message": "`test:e2e` script does not exist"
+        }
+      ],
+      "summary": {
+        "errors": 1,
+        "warnings": 0,
+        "infos": 0,
+        "suppressed": 0
+      }
+    }
+  },
+  "after": {
+    "status": 0,
+    "report": {
+      "version": "0.1.0",
+      "root": "<temporary-demo-project>",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "agent": "codex",
+          "approxTokens": 13
+        }
+      ],
+      "findings": [],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 0,
+        "suppressed": 0
+      }
+    }
+  }
+}

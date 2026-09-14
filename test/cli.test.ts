@@ -161,6 +161,23 @@ describe('amigolint CLI', () => {
     expect(result.stdout).toContain('0 errors');
   });
 
+  it('lints this repository without its deliberately broken examples and fixtures', async () => {
+    const result = await runCli(['--format', 'json'], repoRoot);
+    const report = reportSchema.parse(JSON.parse(result.stdout));
+
+    expect(report.files.map(({ path: file }) => file)).toContain('AGENTS.md');
+    expect(
+      report.files.filter(
+        ({ path: file }) =>
+          file.startsWith('test/fixtures/') ||
+          file.startsWith('examples/broken-repo/'),
+      ),
+    ).toEqual([]);
+    expect(result.code).toBe(0);
+    expect(result.stderr).toBe('');
+    expect(report.summary.errors).toBe(0);
+  });
+
   it('exits 2 when an explicit path does not exist', async () => {
     const result = await runCli(['nope.md'], path.join(fixtureRoot, 'clean'));
 

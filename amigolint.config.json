@@ -1,0 +1,4 @@
+{
+  "$schema": "./schema.json",
+  "exclude": ["test/fixtures/**", "examples/broken-repo/**"]
+}

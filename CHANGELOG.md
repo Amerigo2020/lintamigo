@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Study reports distinguish automated findings from confirmed defects, label
+  artifact timestamps accurately, and retain methodology notes when regenerated
+- Running amigolint in its own source checkout excludes the deliberately
+  broken test fixtures and demo; the instruction-lint CI workflow now checks
+  default repository discovery instead of only the root `AGENTS.md`
 - A UTF-8 byte order mark in `package.json`, `amigolint.config.json` or a
   frontmatter block no longer aborts the run or produces bogus frontmatter
   errors
@@ -28,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Replaced unsupported study-ranking claims in the README with documented
+  sampling limits and a reproducible launch demonstration
 - Improved `stale-path` precision for generated-directory references,
   placeholder syntax, depth-independent globs, extensionless relative paths,
   misplaced single-segment directories, property-path wildcards, scoped package

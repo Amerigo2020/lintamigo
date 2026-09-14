@@ -1,0 +1,4 @@
+AGENTS.md
+  1:11  error  stale-script  `test:e2e` script does not exist
+
+✖ 1 error, 0 warnings, 0 infos in 1 file (≈14 tokens across agent instructions)

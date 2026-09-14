@@ -1,10 +1,13 @@
 # amigolint
 
-Lint your CLAUDE.md, AGENTS.md, Cursor rules and Copilot instructions.
+Catch stale paths and deleted scripts in CLAUDE.md, AGENTS.md, Cursor rules,
+and Copilot instructions. Runs locally without an LLM or API key.
 
 [![npm version](https://img.shields.io/npm/v/amigolint.svg)](https://www.npmjs.com/package/amigolint)
 [![CI](https://github.com/Amerigo2020/amigolint/actions/workflows/ci.yml/badge.svg)](https://github.com/Amerigo2020/amigolint/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+Run in the project you want to check:
 
 ```sh
 npx amigolint
@@ -16,36 +19,26 @@ AGENTS.md:5:11  error  stale-script  `publish-demo` just recipe does not exist
 CLAUDE.md:7:39  error  secret-leak   Potential assigned credential `D3m0****` found
 ```
 
-![amigolint finding stale agent instructions](demo/demo.gif)
+![A stale command, manual correction, and clean amigolint check](demo/launch/amigolint-launch.gif)
+
+For a small example you can reproduce, see the
+[renamed-script demo](demo/launch/README.md).
 
 ## Why
 
-Agent instruction files are executable context without an executable test.
-They keep mentioning renamed files and removed scripts, grow until every prompt
-gets expensive, and can accidentally carry credentials to an LLM provider.
+Renaming a file or deleting a package script does not update the instructions
+your coding agent reads. amigolint checks those references against your
+repository and reports where to fix them. It also flags credential-shaped
+values, oversized instructions, and invalid agent frontmatter.
 
-amigolint checks the repository itself, needs no configuration or LLM, and
-supports CLAUDE.md, AGENTS.md, Cursor rules, Copilot instructions, Gemini CLI,
-Windsurf, Cline, and Roo files. Output stays deterministic for local use and CI.
-
-## State of agent instructions
-
-We ran amigolint on the 100 most-starred public repositories that ship a
-`CLAUDE.md` or `AGENTS.md` (every one above 62k stars, sampled 2026-09-02):
-
-| Metric | Result |
-| --- | ---: |
-| Repositories with at least one error | 73% |
-| Repositories with stale-path errors (files that no longer exist) | 66% |
-| Repositories with stale-script errors (`npm run`, `make`, `just` targets that no longer exist) | 38% |
-| Median approximate tokens of instructions per repository | ≈7.3k |
-
-Raw numbers and the repository list live in [`study/`](study/RESULTS.md);
-`pnpm study` reproduces the run.
+No configuration is required. It supports CLAUDE.md, AGENTS.md, Cursor rules,
+Copilot instructions, Gemini CLI, Windsurf, Cline, and Roo files. Output stays
+deterministic for local use and CI; detected credentials are masked in findings.
 
 ## Quick start
 
-Node.js 20 or newer is required. Run without installing:
+Node.js 20 or newer is required. Run from the project you want to check,
+without installing:
 
 ```sh
 npx amigolint
@@ -72,6 +65,11 @@ Errors exit with status 1. Runtime and configuration failures exit with status
 2. Warnings are allowed unless `--max-warnings <n>` is exceeded. Try every rule
 against the deliberately broken fixture with `pnpm demo` after cloning this
 repository.
+
+In this source checkout, `amigolint.config.json` excludes `test/fixtures/`
+and `examples/broken-repo/` from normal scans because they contain intentional
+errors. Use `pnpm demo` to run the example in an isolated temporary directory
+with its own configuration.
 
 ## What it checks
 
@@ -194,6 +192,15 @@ for (const finding of report.findings) {
 `lint()` returns the JSON report shape: discovered files and token estimates,
 sorted findings, and error, warning, info, and suppression totals.
 
+## Repository study
+
+The [saved study snapshot](study/RESULTS.md) contains automated findings from
+100 selected public GitHub repositories. These findings have no recorded
+manual validation and do not establish how many repositories have confirmed
+defects. Read the [sampling and methodology notes](study/METHODOLOGY.md) before
+using the numbers; the study runner resumes saved results rather than
+reproducing that historical scan.
+
 ## Roadmap
 
 - **v0.2:** safe fixes for dead links and uniquely suggested stale paths, an
@@ -208,6 +215,10 @@ Issues and focused pull requests are welcome. Read
 [CONTRIBUTING.md](CONTRIBUTING.md) for the test-first rule workflow and run
 `pnpm lint`, `pnpm test`, and `pnpm build` before submitting a change. Community
 participation is covered by the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+If amigolint helps you maintain your agent instructions, a GitHub star is
+welcome. Found a useful catch or a false positive? Share a small,
+credential-free example in an [issue](https://github.com/Amerigo2020/amigolint/issues).
 
 amigolint is available under the [MIT License](LICENSE).
 

@@ -1,0 +1,1 @@
+Run `pnpm test:e2e` before opening a pull request

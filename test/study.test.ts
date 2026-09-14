@@ -108,17 +108,32 @@ describe('study aggregation', () => {
 
     const markdown = renderStudyMarkdown(results);
     expect(markdown).toContain('| Repositories analysed | 4 |');
-    expect(markdown).toContain('| Repositories with any error | 75.0% (3/4) |');
     expect(markdown).toContain(
-      '| Repositories with stale-path errors | 50.0% (2/4) |',
+      '| Repositories with at least one error-level finding | 75.0% (3/4) |',
     );
     expect(markdown).toContain(
-      '| Repositories with stale-script errors | 25.0% (1/4) |',
+      '| Repositories with an error-level stale-path finding | 50.0% (2/4) |',
     );
-    expect(markdown).toContain('| Secret-leak findings | 25.0% (1/4) |');
     expect(markdown).toContain(
-      '| Median approximate tokens per repository | ≈25 |',
+      '| Repositories with an error-level stale-script finding | 25.0% (1/4) |',
     );
+    expect(markdown).toContain(
+      '| Repositories with a credential-pattern finding | 25.0% (1/4) |',
+    );
+    expect(markdown).toContain(
+      '| Median approximate tokens across all discovered instructions per repository | ≈25 |',
+    );
+    expect(markdown).toContain('Report written: 2026-09-02T10:00:00.000Z');
+    expect(markdown).toContain(
+      'does not establish when each repository was scanned',
+    );
+    expect(markdown).toContain('no recorded manual validation');
+    expect(markdown).toContain('A flag is not a confirmed defect');
+    expect(markdown).toContain('includes every reported severity');
+    expect(markdown).toContain(
+      '`pnpm study` resumes saved records; it does not rescan completed repositories',
+    );
+    expect(markdown).toContain('[methodology and limitations](METHODOLOGY.md)');
     expect(markdown).not.toContain('AL011');
     expect(markdown).not.toContain('secret-owner/private-repo');
   });
@@ -255,7 +270,9 @@ describe('study runner', () => {
 
     const markdown = await readFile(markdownPath, 'utf8');
     expect(markdown).toContain('| Repositories analysed | 2 |');
-    expect(markdown).toContain('| Secret-leak findings | 50.0% (1/2) |');
+    expect(markdown).toContain(
+      '| Repositories with a credential-pattern finding | 50.0% (1/2) |',
+    );
     expect(markdown).not.toContain('run/me');
     expect(markdown).not.toContain(secret);
 
