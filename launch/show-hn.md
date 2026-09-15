@@ -1,7 +1,8 @@
 # Show HN preparation
 
 Status: facts and submission checklist only; not submitted. The rename and
-public `lintamigo@0.1.1` installation still need release verification.
+public `lintamigo@0.1.1` installation were verified on 2026-09-15
+(see [launch checks](../LAUNCH.md)).
 
 The [HN guidelines](https://news.ycombinator.com/newsguidelines.html) say:
 "Don't post generated text or AI-edited text."

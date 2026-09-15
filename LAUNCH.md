@@ -1,21 +1,23 @@
 # lintAmigo launch
 
 Prepared for Amerigo on 2026-09-15. The product is **lintAmigo**; the npm
-package and CLI are `lintamigo`. Target release: **0.1.1**. Rename publication
-and release verification are pending. Social posts have not been sent, and
-personal tester invitations are not part of this launch.
+package and CLI are `lintamigo`. **Version 0.1.1 is published and verified.**
+Social posts have not been sent, and personal tester invitations are not part
+of this launch.
 
-## Release targets
+## Public release
 
 - npm: [lintamigo](https://www.npmjs.com/package/lintamigo), version 0.1.1
 - GitHub: [Amerigo2020/lintamigo](https://github.com/Amerigo2020/lintamigo)
-- Release tag: `v0.1.1`
+- [GitHub release v0.1.1](https://github.com/Amerigo2020/lintamigo/releases/tag/v0.1.1)
 - README, schema links, CLI help, reports, API imports, and media use the new
   name; legacy amigolint configuration and suppression comments remain accepted.
 
-These are the intended release coordinates, not confirmation of publication.
-The previous `amigolint@0.1.0` package is a historical artifact; preparing the
-rename does not update that package or prove the new one installs.
+The release uses source commit `6d61f8128db3c1aab474bef96c69a708c0beb5a7`,
+which matches npm metadata. The [release workflow](https://github.com/Amerigo2020/lintamigo/actions/runs/34982736153)
+published with provenance and marked `amigolint@0.1.0` with a migration notice.
+The previous package still installs and works; old GitHub URLs redirect to the
+renamed repository.
 
 ## Assets to review
 
@@ -43,19 +45,22 @@ repository contents or claim a defect in someone else's live project.
   while excluding deliberately broken examples and fixtures.
 - [x] The renamed demo media is visually reviewed against actual CLI output;
   the launch MP4 is 26.76 seconds and its recorded hash matches the tested build.
-- [ ] The reviewed changes are on GitHub and CI is green for that commit.
-- [ ] npm publication and the GitHub release for 0.1.1 are verified.
-- [ ] A fresh public install of `lintamigo@0.1.1` runs successfully from a
+- [x] The reviewed changes are on GitHub and CI is green for that commit.
+- [x] npm publication and the GitHub release for 0.1.1 are verified.
+- [x] A fresh public install of `lintamigo@0.1.1` runs successfully from a
   separate project, and old GitHub URLs redirect to the renamed repository.
 
 Check the latest [main revision](https://github.com/Amerigo2020/lintamigo/tree/main)
 and its [GitHub Actions runs](https://github.com/Amerigo2020/lintamigo/actions).
 Local build evidence, pushed source, and a published npm package are separate
-checks. The release owner updates this checklist after verifying them.
+checks. The [release source CI](https://github.com/Amerigo2020/lintamigo/actions/runs/34982542183)
+passed on Linux, macOS, and Windows. A fresh public install passed the version,
+CLI, legacy binary alias, API import, and `init` checks. A separate clean install
+of `amigolint@0.1.0` also checked this source checkout with zero findings.
 
 ## Public launch sequence
 
-1. Publish and verify the rename and release before sharing install commands.
+1. Rename and release verified on 2026-09-15; the public install command is ready to share.
 2. Publish the LinkedIn post from Amerigo's profile with the renamed MP4 and
    repository link; stay available for questions.
 3. Write the Show HN title and discussion personally using the facts provided,

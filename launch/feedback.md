@@ -6,8 +6,8 @@ repositories or complete instruction files.
 
 ## A small trial
 
-After the renamed package has been published and verified, run this from a
-project that already has agent instructions:
+The published package was verified on 2026-09-15. Run this from a project
+that already has agent instructions:
 
 ```sh
 npx --yes lintamigo@0.1.1 --version

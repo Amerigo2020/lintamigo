@@ -1,7 +1,7 @@
 # LinkedIn launch draft
 
-Status: draft for the lintAmigo rename; not posted. Verify the public
-`lintamigo@0.1.1` install and renamed repository before posting.
+Status: ready for review; not posted. The public `lintamigo@0.1.1` install
+and renamed repository were verified on 2026-09-15 (see [launch checks](../LAUNCH.md)).
 Attach the MP4 linked from [the launch demo](../demo/launch/README.md).
 The video is a controlled reproduction with real CLI output.
 
@@ -38,9 +38,7 @@ Wenn es euch hilft, freue ich mich über einen Star.
 
 ## Before posting
 
-- Publish the reviewed repository changes first, so cloning the repo includes
-  the corrected default configuration and qualified study documentation.
-- Verify `npx --yes lintamigo@0.1.1 --version` in a fresh environment.
+- Source changes and a fresh public install are verified in [launch checks](../LAUNCH.md).
 - Attach the recorded demo, not the deliberately noisy all-rules example.
 - Keep this description of the video as a small example; do not describe it
   as a finding in a third-party production repository.
