@@ -26,7 +26,7 @@ if (!(await commandExists('vhs'))) {
   process.exit(0);
 }
 
-const temporaryRoot = await mkdtemp(path.join(tmpdir(), 'amigolint-vhs-'));
+const temporaryRoot = await mkdtemp(path.join(tmpdir(), 'lintamigo-vhs-'));
 
 try {
   await cp(
@@ -36,7 +36,7 @@ try {
   );
   const binDirectory = path.join(temporaryRoot, 'node_modules', '.bin');
   await mkdir(binDirectory, { recursive: true });
-  const localCliPath = path.join(binDirectory, 'amigolint');
+  const localCliPath = path.join(binDirectory, 'lintamigo');
   await symlink(cliPath, localCliPath);
   await chmod(cliPath, 0o755);
 

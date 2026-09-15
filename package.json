@@ -1,16 +1,17 @@
 {
-  "name": "amigolint",
-  "version": "0.1.0",
+  "name": "lintamigo",
+  "version": "0.1.1",
   "description": "Lint your CLAUDE.md, AGENTS.md, Cursor rules and Copilot instructions.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Amerigo2020/amigolint.git"
+    "url": "git+https://github.com/Amerigo2020/lintamigo.git"
   },
   "type": "module",
   "main": "dist/cli.mjs",
   "types": "index.d.ts",
   "bin": {
+    "lintamigo": "dist/cli.mjs",
     "amigolint": "dist/cli.mjs"
   },
   "exports": {
@@ -69,7 +70,7 @@
     "target": "node20"
   },
   "bugs": {
-    "url": "https://github.com/Amerigo2020/amigolint/issues"
+    "url": "https://github.com/Amerigo2020/lintamigo/issues"
   },
-  "homepage": "https://github.com/Amerigo2020/amigolint#readme"
+  "homepage": "https://github.com/Amerigo2020/lintamigo#readme"
 }

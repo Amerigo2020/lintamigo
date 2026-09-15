@@ -29,7 +29,7 @@ Ctrl+L
 Show
 Sleep 500ms
 
-Type "# Minimal reproduction: a renamed test script"
+Type "# lintAmigo: a renamed test script (minimal reproduction)"
 Enter
 Sleep 500ms
 Type "cat AGENTS.md"
@@ -39,7 +39,7 @@ Type "cat package.json"
 Enter
 Sleep 1600ms
 
-Type "npx amigolint"
+Type "npx lintamigo"
 Enter
 Wait+Screen /1 error, 0 warnings, 0 infos/
 Sleep 5s
@@ -50,7 +50,7 @@ Sleep 1s
 Type "cat AGENTS.md"
 Enter
 Sleep 1500ms
-Type "npx amigolint"
+Type "npx lintamigo"
 Enter
 Wait+Screen /0 errors, 0 warnings, 0 infos/
 Sleep 6s

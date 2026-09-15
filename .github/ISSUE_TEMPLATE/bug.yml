@@ -6,13 +6,13 @@ labels:
 body:
   - type: markdown
     attributes:
-      value: Thanks for helping improve amigolint. Never paste a real secret.
+      value: Thanks for helping improve lintAmigo. Never paste a real secret.
   - type: input
     id: version
     attributes:
-      label: amigolint version
-      description: Run `npx amigolint --version`.
-      placeholder: 0.1.0
+      label: lintAmigo version
+      description: Run `npx lintamigo --version`.
+      placeholder: 0.1.1
     validations:
       required: true
   - type: input

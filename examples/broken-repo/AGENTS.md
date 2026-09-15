@@ -15,4 +15,4 @@ Use best practices when necessary.
 
 TODO: replace this temporary launch guidance.
 
-The local helper lives at `/Users/demo/amigolint/scripts/check.ts`.
+The local helper lives at `/Users/demo/lintamigo/scripts/check.ts`.

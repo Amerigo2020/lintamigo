@@ -75,47 +75,52 @@ export async function loadConfig(
 ): Promise<LintConfig> {
   const cwd = path.resolve(options.cwd ?? process.cwd());
   if (options.path !== undefined) {
-    return parseConfigFile(path.resolve(cwd, options.path), options.path, true);
+    return validateConfig(
+      await readJsonFile(path.resolve(cwd, options.path), options.path, true),
+      options.path,
+    );
   }
 
-  for (const name of ['amigolint.config.json', '.amigolintrc.json']) {
-    const loaded = await parseConfigFile(path.join(cwd, name), name, false);
-    if (loaded !== undefined) {
-      return loaded;
+  const source = await resolveConfigSource(cwd);
+  return source === undefined
+    ? cloneDefaultConfig()
+    : validateConfig(source.value, source.name);
+}
+
+export async function findConfigSource(
+  cwd: string,
+): Promise<string | undefined> {
+  return (await resolveConfigSource(path.resolve(cwd)))?.name;
+}
+
+async function resolveConfigSource(
+  cwd: string,
+): Promise<{ name: string; value: unknown } | undefined> {
+  for (const name of ['lintamigo.config.json', '.lintamigorc.json']) {
+    const value = await readJsonFile(path.join(cwd, name), name, false);
+    if (value !== undefined) {
+      return { name, value };
     }
   }
 
   const packagePath = path.join(cwd, 'package.json');
   const packageJson = await readJsonFile(packagePath, 'package.json', false);
-  if (packageJson !== undefined && isRecord(packageJson)) {
-    if (packageJson.amigolint === undefined) {
-      return cloneDefaultConfig();
-    }
-    return validateConfig(packageJson.amigolint, 'package.json#amigolint');
+  if (isRecord(packageJson) && packageJson.lintamigo !== undefined) {
+    return { name: 'package.json#lintamigo', value: packageJson.lintamigo };
   }
 
-  return cloneDefaultConfig();
-}
+  for (const name of ['amigolint.config.json', '.amigolintrc.json']) {
+    const value = await readJsonFile(path.join(cwd, name), name, false);
+    if (value !== undefined) {
+      return { name, value };
+    }
+  }
 
-async function parseConfigFile(
-  configPath: string,
-  displayPath: string,
-  required: true,
-): Promise<LintConfig>;
-async function parseConfigFile(
-  configPath: string,
-  displayPath: string,
-  required: false,
-): Promise<LintConfig | undefined>;
-async function parseConfigFile(
-  configPath: string,
-  displayPath: string,
-  required: boolean,
-): Promise<LintConfig | undefined> {
-  const parsedJson = await readJsonFile(configPath, displayPath, required);
-  return parsedJson === undefined
-    ? undefined
-    : validateConfig(parsedJson, displayPath);
+  if (isRecord(packageJson) && packageJson.amigolint !== undefined) {
+    return { name: 'package.json#amigolint', value: packageJson.amigolint };
+  }
+
+  return undefined;
 }
 
 async function readJsonFile(
@@ -247,9 +252,9 @@ export function generateConfigJsonSchema(): Record<string, unknown> {
   return {
     ...generated,
     $schema: 'https://json-schema.org/draft/2020-12/schema',
-    $id: 'https://raw.githubusercontent.com/Amerigo2020/amigolint/main/schema.json',
-    title: 'amigolint configuration',
-    description: 'Configuration for amigolint instruction-file linting',
+    $id: 'https://raw.githubusercontent.com/Amerigo2020/lintamigo/main/schema.json',
+    title: 'lintAmigo configuration',
+    description: 'Configuration for lintAmigo instruction-file linting',
   };
 }
 

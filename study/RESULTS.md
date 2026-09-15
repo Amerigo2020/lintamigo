@@ -16,7 +16,7 @@ This report counts automated linter findings with no recorded manual validation.
 
 Credential-pattern findings are aggregate-only; repository names and credential values are not recorded alongside them. A match does not establish that a credential was real, active, or usable.
 
-The saved data does not capture repository commit SHAs, the linter version, star counts, or the original search response. By default, the study runner bypasses repository-specific amigolint configuration, so intentional examples or test fixtures can contribute findings.
+The saved data does not capture repository commit SHAs, the linter version, star counts, or the original search response. By default, the study runner bypasses repository-specific lintAmigo configuration, so intentional examples or test fixtures can contribute findings.
 
 ## Most common rule codes
 

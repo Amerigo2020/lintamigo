@@ -78,8 +78,8 @@ beforeAll(async () => {
     shell: process.platform === 'win32',
   });
 
-  fixtureRoot = await mkdtemp(path.join(tmpdir(), 'amigolint-cli-'));
-  linkedCliPath = path.join(fixtureRoot, 'amigolint-bin');
+  fixtureRoot = await mkdtemp(path.join(tmpdir(), 'lintamigo-cli-'));
+  linkedCliPath = path.join(fixtureRoot, 'lintamigo-bin');
   if (process.platform !== 'win32') {
     await symlink(cliPath, linkedCliPath);
   }
@@ -110,7 +110,39 @@ afterAll(async () => {
   }
 });
 
-describe('amigolint CLI', () => {
+describe('lintamigo CLI', () => {
+  it('uses lintamigo in CLI help', async () => {
+    const result = await runCli(['--help'], repoRoot);
+
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain('Usage: lintamigo');
+    expect(result.stdout).toContain('lintamigo.config.json');
+  });
+
+  it.each([
+    'amigolint.config.json',
+    '.amigolintrc.json',
+    '.lintamigorc.json',
+    'package.json#amigolint',
+    'package.json#lintamigo',
+  ])('init preserves existing settings in %s', async (source) => {
+    const cwd = path.join(fixtureRoot, `existing-${source}`);
+    await mkdir(cwd, { recursive: true });
+    const [filename = source, key] = source.split('#');
+    const settings = { rules: { 'stale-path': 'off' } };
+    const content = JSON.stringify(key ? { [key]: settings } : settings);
+    await writeFile(path.join(cwd, filename), content);
+
+    const result = await runCli(['init'], cwd);
+
+    expect(result.code).toBe(2);
+    expect(result.stderr).toContain(source);
+    expect(result.stderr).toContain('already exists');
+    await expect(
+      readFile(path.join(cwd, 'lintamigo.config.json')),
+    ).rejects.toMatchObject({ code: 'ENOENT' });
+    expect(await readFile(path.join(cwd, filename), 'utf8')).toBe(content);
+  });
   it('prints the package version', async () => {
     const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8')) as {
       version: string;
@@ -183,7 +215,7 @@ describe('amigolint CLI', () => {
 
     expect(result).toEqual({
       code: 2,
-      stderr: 'amigolint: `nope.md` does not exist\n',
+      stderr: 'lintamigo: `nope.md` does not exist\n',
       stdout: '',
     });
   });
@@ -329,7 +361,7 @@ describe('amigolint CLI', () => {
       const disabled = await runCli(baseArgs, cwd);
       const enabledByFlag = await runCli([...baseArgs, '--check-urls'], cwd);
       await writeFile(
-        path.join(cwd, 'amigolint.config.json'),
+        path.join(cwd, 'lintamigo.config.json'),
         JSON.stringify({ checkUrls: true }),
       );
       const enabledByConfig = await runCli(baseArgs, cwd);
@@ -383,7 +415,7 @@ describe('amigolint CLI', () => {
       version: '2.1.0',
       runs: [
         {
-          tool: { driver: { name: 'amigolint' } },
+          tool: { driver: { name: 'lintamigo' } },
         },
       ],
     });
@@ -569,7 +601,7 @@ describe('amigolint CLI', () => {
     await mkdir(cwd, { recursive: true });
 
     const initialized = await runCli(['init'], cwd);
-    const configPath = path.join(cwd, 'amigolint.config.json');
+    const configPath = path.join(cwd, 'lintamigo.config.json');
     const source = await readFile(configPath, 'utf8');
     const loaded = await runCli(['--format', 'json'], cwd);
     const repeated = await runCli(['init'], cwd);
@@ -577,7 +609,7 @@ describe('amigolint CLI', () => {
     expect(initialized).toEqual({
       code: 0,
       stderr: '',
-      stdout: 'Created `amigolint.config.json`\n',
+      stdout: 'Created `lintamigo.config.json`\n',
     });
     expect(source).toContain('// AL001:');
     expect(source).toContain('// AL015:');

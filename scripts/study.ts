@@ -206,7 +206,7 @@ export function renderStudyMarkdown(results: StudyResults): string {
     '',
     'Credential-pattern findings are aggregate-only; repository names and credential values are not recorded alongside them. A match does not establish that a credential was real, active, or usable.',
     '',
-    'The saved data does not capture repository commit SHAs, the linter version, star counts, or the original search response. By default, the study runner bypasses repository-specific amigolint configuration, so intentional examples or test fixtures can contribute findings.',
+    'The saved data does not capture repository commit SHAs, the linter version, star counts, or the original search response. By default, the study runner bypasses repository-specific lintAmigo configuration, so intentional examples or test fixtures can contribute findings.',
     '',
     '## Most common rule codes',
     '',
@@ -260,7 +260,7 @@ export async function runStudy(
     return results;
   }
 
-  const temporaryRoot = await mkdtemp(path.join(tmpdir(), 'amigolint-study-'));
+  const temporaryRoot = await mkdtemp(path.join(tmpdir(), 'lintamigo-study-'));
   try {
     for (const [index, repository] of pending.entries()) {
       if (index > 0) {

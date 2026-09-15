@@ -1,6 +1,7 @@
 # Show HN preparation
 
-Status: facts and submission checklist only; not submitted.
+Status: facts and submission checklist only; not submitted. The rename and
+public `lintamigo@0.1.1` installation still need release verification.
 
 The [HN guidelines](https://news.ycombinator.com/newsguidelines.html) say:
 "Don't post generated text or AI-edited text."
@@ -9,16 +10,16 @@ file is preparation, not a comment to copy into HN.
 
 ## Submission facts
 
-- Project: amigolint, MIT-licensed TypeScript CLI.
-- Submit the repository URL: https://github.com/Amerigo2020/amigolint
+- Project: lintAmigo, MIT-licensed TypeScript CLI.
+- Submit the repository URL: https://github.com/Amerigo2020/lintamigo
 - Start the title with `Show HN:` and describe what can be tried.
-- Try it from a project directory: `npx amigolint` (Node.js 20 or newer).
+- Try it from a project directory: `npx lintamigo` (Node.js 20 or newer).
 - No signup, LLM call or API key is required by the linter.
 - Checks instruction files against real repository paths and commands.
 - Supports CLAUDE.md, AGENTS.md, Cursor rules and Copilot instructions,
   with further formats listed in the README.
 - Fifteen rules, GitHub annotations, JSON and SARIF output, and a public API.
-- Findings and suggestions are advisory; v0.1.0 does not automatically edit
+- Findings and suggestions are advisory; v0.1.1 does not automatically edit
   instruction files.
 - Contradiction detection and token counts use heuristics. A secret-shaped
   match is not proof that a live credential was exposed.
@@ -42,8 +43,10 @@ SHAs, a linter version, or per-finding manual validation.
 ## Submission checklist
 
 - The reviewed source changes are on GitHub and CI is green for that commit.
+- The renamed npm package installs as `lintamigo@0.1.1` and the repository
+  resolves at `Amerigo2020/lintamigo`.
 - The command installs and works from a separate project, without cloning
-  amigolint itself.
+  lintAmigo itself.
 - You can stay in the discussion and explain the implementation yourself.
 - Use your own text; do not coordinate upvotes or comments.
 - Submit once and respond to substantive questions and bug reports.

@@ -1,11 +1,13 @@
 {
+  "product": "lintAmigo",
+  "command": "npx lintamigo",
   "provenance": "Deliberately constructed minimal reproduction, not a repo audit",
-  "version": "0.1.0",
-  "cliSha256": "57adcf6dc809df5e08a24b6ef8d4a06f9bcff42ebd578da4deab46dd89043411",
+  "version": "0.1.1",
+  "cliSha256": "e62222198f6c5a7c7a04bc5301032d6d90c8b7466870897912089b80d1733ea0",
   "before": {
     "status": 1,
     "report": {
-      "version": "0.1.0",
+      "version": "0.1.1",
       "root": "<temporary-demo-project>",
       "files": [
         {
@@ -36,7 +38,7 @@
   "after": {
     "status": 0,
     "report": {
-      "version": "0.1.0",
+      "version": "0.1.1",
       "root": "<temporary-demo-project>",
       "files": [
         {

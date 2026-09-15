@@ -1,16 +1,19 @@
-# amigolint
+# lintAmigo
 
 Catch stale paths and deleted scripts in CLAUDE.md, AGENTS.md, Cursor rules,
 and Copilot instructions. Runs locally without an LLM or API key.
 
-[![npm version](https://img.shields.io/npm/v/amigolint.svg)](https://www.npmjs.com/package/amigolint)
-[![CI](https://github.com/Amerigo2020/amigolint/actions/workflows/ci.yml/badge.svg)](https://github.com/Amerigo2020/amigolint/actions/workflows/ci.yml)
+Formerly **amigolint**. The product is **lintAmigo**; the npm package and
+command are lowercase `lintamigo`.
+
+[![npm version](https://img.shields.io/npm/v/lintamigo.svg)](https://www.npmjs.com/package/lintamigo)
+[![CI](https://github.com/Amerigo2020/lintamigo/actions/workflows/ci.yml/badge.svg)](https://github.com/Amerigo2020/lintamigo/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Run in the project you want to check:
 
 ```sh
-npx amigolint
+npx lintamigo
 ```
 
 ```text
@@ -19,7 +22,7 @@ AGENTS.md:5:11  error  stale-script  `publish-demo` just recipe does not exist
 CLAUDE.md:7:39  error  secret-leak   Potential assigned credential `D3m0****` found
 ```
 
-![A stale command, manual correction, and clean amigolint check](demo/launch/amigolint-launch.gif)
+![A stale command, manual correction, and clean lintAmigo check](demo/launch/lintamigo-launch.gif)
 
 For a small example you can reproduce, see the
 [renamed-script demo](demo/launch/README.md).
@@ -27,7 +30,7 @@ For a small example you can reproduce, see the
 ## Why
 
 Renaming a file or deleting a package script does not update the instructions
-your coding agent reads. amigolint checks those references against your
+your coding agent reads. lintAmigo checks those references against your
 repository and reports where to fix them. It also flags credential-shaped
 values, oversized instructions, and invalid agent frontmatter.
 
@@ -41,24 +44,24 @@ Node.js 20 or newer is required. Run from the project you want to check,
 without installing:
 
 ```sh
-npx amigolint
+npx lintamigo
 ```
 
 Or pin it in a project:
 
 ```sh
-npm install --save-dev amigolint
-npx amigolint
+npm install --save-dev lintamigo
+npx lintamigo
 ```
 
 Useful commands:
 
 ```sh
-npx amigolint AGENTS.md docs/CLAUDE.md
-npx amigolint --format github
-npx amigolint --rule stale-path,stale-script
-npx amigolint stats
-npx amigolint rules --format md
+npx lintamigo AGENTS.md docs/CLAUDE.md
+npx lintamigo --format github
+npx lintamigo --rule stale-path,stale-script
+npx lintamigo stats
+npx lintamigo rules --format md
 ```
 
 Errors exit with status 1. Runtime and configuration failures exit with status
@@ -66,14 +69,17 @@ Errors exit with status 1. Runtime and configuration failures exit with status
 against the deliberately broken fixture with `pnpm demo` after cloning this
 repository.
 
-In this source checkout, `amigolint.config.json` excludes `test/fixtures/`
+In this source checkout, `lintamigo.config.json` excludes `test/fixtures/`
 and `examples/broken-repo/` from normal scans because they contain intentional
 errors. Use `pnpm demo` to run the example in an isolated temporary directory
 with its own configuration.
 
+The root also keeps an identical `amigolint.config.json` so the published
+legacy `amigolint@0.1.0` package excludes those fixtures when run here.
+
 ## What it checks
 
-This table is the output of `amigolint rules --format md`:
+This table is the output of `lintamigo rules --format md`:
 
 | Code | Rule | Default | Description |
 | --- | --- | --- | --- |
@@ -93,19 +99,19 @@ This table is the output of `amigolint rules --format md`:
 | AL014 | `todo-marker` | info | Reports unresolved TODO-style markers outside fenced code examples. |
 | AL015 | `absolute-user-path` | warn | Reports absolute home-directory paths that only work on one contributor machine. |
 
-`amigolint stats` separates files and approximate tokens into **Always loaded**
+`lintamigo stats` separates files and approximate tokens into **Always loaded**
 and **On demand** columns. Its summary counts only context loaded at startup;
 skills, commands, scoped instructions, and nested location-specific files no
 longer inflate that total.
 
 ## Configuration
 
-Create a documented starter config with `npx amigolint init`, or add an
-`amigolint.config.json` manually:
+Create a documented starter config with `npx lintamigo init`, or create
+`lintamigo.config.json` manually:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/Amerigo2020/amigolint/main/schema.json",
+  "$schema": "https://raw.githubusercontent.com/Amerigo2020/lintamigo/main/schema.json",
   "include": ["docs/agents/*.md"],
   "exclude": ["**/fixtures/**"],
   "rules": {
@@ -117,20 +123,49 @@ Create a documented starter config with `npx amigolint init`, or add an
 }
 ```
 
-Configuration lookup order is `--config <path>`, `amigolint.config.json`,
-`.amigolintrc.json`, then `package.json#amigolint`. Use `--check-urls` to opt
-into bounded HTTP link checks.
+`init` refuses to create a new file when any recognized configuration file
+or package key already exists, including a legacy one, so it cannot silently
+replace or shadow your settings.
+
+Configuration lookup uses the first available source, in this order:
+
+1. An explicit `--config <path>`
+2. `lintamigo.config.json`
+3. `.lintamigorc.json`
+4. `package.json#lintamigo`
+5. Legacy `amigolint.config.json`
+6. Legacy `.amigolintrc.json`
+7. Legacy `package.json#amigolint`
+
+The selected source is merged over the defaults; separate configuration
+sources are not combined. Use `--check-urls` to opt into bounded HTTP link
+checks.
 
 Suppress a finding close to the instruction when the exception is intentional:
 
 ```md
-<!-- amigolint-disable-next-line stale-path -->
+<!-- lintamigo-disable-next-line stale-path -->
 Use `generated/client.ts` after code generation.
 ```
 
-Block suppressions use `<!-- amigolint-disable stale-path, dead-link -->` and
-`<!-- amigolint-enable -->`; `<!-- amigolint-disable-file -->` suppresses a
+Block suppressions use `<!-- lintamigo-disable stale-path, dead-link -->` and
+`<!-- lintamigo-enable -->`; `<!-- lintamigo-disable-file -->` suppresses a
 whole file when placed at the top.
+
+Existing `amigolint-disable-next-line`, `amigolint-disable`,
+`amigolint-enable`, and `amigolint-disable-file` comments remain supported.
+
+### Migrating from amigolint
+
+Use `npx lintamigo` for new runs. If the old package is a project dependency,
+replace it with `lintamigo` and update CI commands and API imports. Existing
+configuration and suppression comments continue to work; rename them when
+convenient. New configuration sources take precedence over legacy sources
+as listed above.
+
+The new package also installs an `amigolint` binary alias for existing local
+scripts. The npm dependency and API import still use `lintamigo`; the old
+`amigolint` npm package does not become the new package automatically.
 
 ## CI
 
@@ -144,26 +179,26 @@ permissions:
   contents: read
 
 jobs:
-  amigolint:
+  lintamigo:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npx --yes amigolint@0.1.0 --format github
+      - run: npx --yes lintamigo@0.1.1 --format github
 ```
 
-For [pre-commit](https://pre-commit.com/), install amigolint as a dev dependency
+For [pre-commit](https://pre-commit.com/), install `lintamigo` as a dev dependency
 and add:
 
 ```yaml
 repos:
   - repo: local
     hooks:
-      - id: amigolint
-        name: amigolint
-        entry: npx --no-install amigolint
+      - id: lintamigo
+        name: lintAmigo
+        entry: npx --no-install lintamigo
         language: system
         pass_filenames: false
 ```
@@ -176,7 +211,7 @@ JSON, SARIF 2.1.0, and GitHub workflow-command formats are also available with
 Editors and other tools can use the same pipeline as the CLI:
 
 ```ts
-import { lint } from 'amigolint';
+import { lint } from 'lintamigo';
 
 const report = await lint({
   root: process.cwd(),
@@ -216,11 +251,11 @@ Issues and focused pull requests are welcome. Read
 `pnpm lint`, `pnpm test`, and `pnpm build` before submitting a change. Community
 participation is covered by the [Code of Conduct](CODE_OF_CONDUCT.md).
 
-If amigolint helps you maintain your agent instructions, a GitHub star is
+If lintAmigo helps you maintain your agent instructions, a GitHub star is
 welcome. Found a useful catch or a false positive? Share a small,
-credential-free example in an [issue](https://github.com/Amerigo2020/amigolint/issues).
+credential-free example in an [issue](https://github.com/Amerigo2020/lintamigo/issues).
 
-amigolint is available under the [MIT License](LICENSE).
+lintAmigo is available under the [MIT License](LICENSE).
 
 ---
 

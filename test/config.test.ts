@@ -1,9 +1,10 @@
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   ConfigError,
+  findConfigSource,
   generateConfigJsonSchema,
   loadConfig,
 } from '../src/config.js';
@@ -16,7 +17,6 @@ beforeEach(() => {
 
 afterEach(async () => {
   vi.unstubAllEnvs();
-  const { rm } = await import('node:fs/promises');
   await Promise.all(
     temporaryDirectories
       .splice(0)
@@ -31,7 +31,118 @@ async function temporaryRoot(): Promise<string> {
 }
 
 describe('configuration', () => {
-  it('uses the documented lookup order', async () => {
+  it('prefers every lintamigo source before falling back to legacy sources', async () => {
+    const root = await temporaryRoot();
+    const fileSources = [
+      'lintamigo.config.json',
+      '.lintamigorc.json',
+      'amigolint.config.json',
+      '.amigolintrc.json',
+    ];
+    await Promise.all(
+      fileSources.map((name) =>
+        writeFile(path.join(root, name), JSON.stringify({ include: [name] })),
+      ),
+    );
+    const packagePath = path.join(root, 'package.json');
+    const legacyPackage = { include: ['package.json#amigolint'] };
+    await writeFile(
+      packagePath,
+      JSON.stringify({
+        lintamigo: { include: ['package.json#lintamigo'] },
+        amigolint: legacyPackage,
+      }),
+    );
+
+    for (const name of fileSources.slice(0, 2)) {
+      await expect(findConfigSource(root)).resolves.toBe(name);
+      await expect(loadConfig({ cwd: root })).resolves.toMatchObject({
+        include: [name],
+      });
+      await rm(path.join(root, name));
+    }
+    await expect(loadConfig({ cwd: root })).resolves.toMatchObject({
+      include: ['package.json#lintamigo'],
+    });
+    await expect(findConfigSource(root)).resolves.toBe(
+      'package.json#lintamigo',
+    );
+    await writeFile(packagePath, JSON.stringify({ amigolint: legacyPackage }));
+    for (const name of fileSources.slice(2)) {
+      await expect(findConfigSource(root)).resolves.toBe(name);
+      await expect(loadConfig({ cwd: root })).resolves.toMatchObject({
+        include: [name],
+      });
+      await rm(path.join(root, name));
+    }
+    await expect(loadConfig({ cwd: root })).resolves.toMatchObject(
+      legacyPackage,
+    );
+    await expect(findConfigSource(root)).resolves.toBe(
+      'package.json#amigolint',
+    );
+    await writeFile(packagePath, '{}');
+    await expect(findConfigSource(root)).resolves.toBeUndefined();
+  });
+
+  it('an empty lintamigo config overrides legacy settings instead of merging them', async () => {
+    const root = await temporaryRoot();
+    await Promise.all([
+      writeFile(path.join(root, 'lintamigo.config.json'), '{}'),
+      writeFile(
+        path.join(root, 'amigolint.config.json'),
+        JSON.stringify({ rules: { 'stale-path': 'off' }, checkUrls: true }),
+      ),
+    ]);
+
+    const config = await loadConfig({ cwd: root });
+    expect(config.rules).toEqual({});
+    expect(config.checkUrls).toBe(false);
+  });
+
+  it('identifies an existing source for init even when its config is schema-invalid', async () => {
+    const root = await temporaryRoot();
+    await writeFile(
+      path.join(root, 'package.json'),
+      '\uFEFF{ /* Preserve this source */ "lintamigo": null }',
+    );
+
+    await expect(findConfigSource(root)).resolves.toBe(
+      'package.json#lintamigo',
+    );
+    await expect(loadConfig({ cwd: root })).rejects.toThrow(
+      'package.json#lintamigo',
+    );
+    await writeFile(path.join(root, 'lintamigo.config.json'), '{');
+    await expect(findConfigSource(root)).rejects.toThrow(
+      'lintamigo.config.json',
+    );
+  });
+
+  it.each([
+    ['lintamigo.config.json', '{', 'lintamigo.config.json'],
+    [
+      '.lintamigorc.json',
+      JSON.stringify({ rules: { 'stale-path': 'loud' } }),
+      '.lintamigorc.json',
+    ],
+    [
+      'package.json',
+      JSON.stringify({ lintamigo: null, amigolint: {} }),
+      'package.json#lintamigo',
+    ],
+  ])('rejects invalid %s instead of using a valid legacy config', async (file, source, displayPath) => {
+    const root = await temporaryRoot();
+    await Promise.all([
+      writeFile(path.join(root, file), source),
+      writeFile(path.join(root, 'amigolint.config.json'), '{}'),
+    ]);
+
+    await expect(loadConfig({ cwd: root })).rejects.toBeInstanceOf(ConfigError);
+    await expect(loadConfig({ cwd: root })).rejects.toThrow(displayPath);
+  });
+
+  it('retains the legacy lookup order when no new config is present', async () => {
     const root = await temporaryRoot();
     await Promise.all([
       writeFile(
@@ -94,6 +205,7 @@ describe('configuration', () => {
       path.join(root, 'amigolint.config.json'),
       JSON.stringify({ rules: { 'stale-path': 'off' } }),
     );
+    await writeFile(path.join(root, 'lintamigo.config.json'), '{');
 
     await expect(
       loadConfig({ cwd: root, path: 'custom.json' }),
@@ -171,7 +283,13 @@ describe('configuration', () => {
   });
 
   it.each([
+    ['lintamigo.config.json', { checkUrls: true }, { checkUrls: true }],
     ['amigolint.config.json', { checkUrls: true }, { checkUrls: true }],
+    [
+      'package.json',
+      { lintamigo: { include: ['docs/agents/*.md'] } },
+      { include: ['docs/agents/*.md'] },
+    ],
     [
       'package.json',
       { amigolint: { include: ['docs/agents/*.md'] } },
@@ -240,6 +358,11 @@ describe('configuration', () => {
       await readFile(path.resolve('schema.json'), 'utf8'),
     ) as unknown;
     const generated = generateConfigJsonSchema();
+    expect(generated).toMatchObject({
+      $id: 'https://raw.githubusercontent.com/Amerigo2020/lintamigo/main/schema.json',
+      title: 'lintAmigo configuration',
+      description: 'Configuration for lintAmigo instruction-file linting',
+    });
     const tupleBranch = (
       (
         (

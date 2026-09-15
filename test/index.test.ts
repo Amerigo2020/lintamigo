@@ -51,7 +51,10 @@ describe('lint', () => {
     expect(ignored.findings).toEqual([]);
   });
 
-  it('auto-loads repository config and applies rule severity and options', async () => {
+  it.each([
+    'lintamigo.config.json',
+    'amigolint.config.json',
+  ])('auto-loads %s and applies rule severity and options', async (configName) => {
     const root = await mkdtemp(path.join(tmpdir(), 'amigolint-api-config-'));
     await Promise.all([
       writeFile(
@@ -59,7 +62,7 @@ describe('lint', () => {
         'Use `missing/ignored.ts` and `missing/visible.ts`\n',
       ),
       writeFile(
-        path.join(root, 'amigolint.config.json'),
+        path.join(root, configName),
         JSON.stringify({
           rules: {
             'stale-path': ['info', { ignore: ['missing/ignored.ts'] }],

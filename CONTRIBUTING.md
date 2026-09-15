@@ -1,4 +1,4 @@
-# Contributing to amigolint
+# Contributing to lintAmigo
 
 Thanks for helping make agent instruction files more reliable. Bug reports,
 new rule proposals, documentation fixes, and focused pull requests are all
@@ -17,7 +17,7 @@ Participation in this project is governed by the
 
 ## Development setup
 
-amigolint requires Node.js 20 or newer and pnpm.
+lintAmigo requires Node.js 20 or newer and pnpm.
 
 ```sh
 pnpm install

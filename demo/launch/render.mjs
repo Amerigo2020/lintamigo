@@ -16,7 +16,10 @@ import { fileURLToPath } from 'node:url';
 const launchRoot = fileURLToPath(new URL('./', import.meta.url));
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
 const cliPath = path.join(repositoryRoot, 'dist', 'cli.mjs');
-const temporaryRoot = await mkdtemp(path.join(tmpdir(), 'amigolint-launch-'));
+const packageMetadata = JSON.parse(
+  await readFile(path.join(repositoryRoot, 'package.json'), 'utf8'),
+);
+const temporaryRoot = await mkdtemp(path.join(tmpdir(), 'lintamigo-launch-'));
 const before = await readFile(
   path.join(launchRoot, 'instructions.before.txt'),
   'utf8',
@@ -33,6 +36,7 @@ try {
   );
   await writeFile(path.join(temporaryRoot, 'AGENTS.md'), before);
   const beforeRun = lintReport();
+  assert.equal(beforeRun.report.version, packageMetadata.version);
   assert.equal(beforeRun.status, 1);
   assert.deepEqual(beforeRun.report.summary, {
     errors: 1,
@@ -59,6 +63,8 @@ try {
   const afterText = lintText(0);
 
   const evidence = {
+    product: 'lintAmigo',
+    command: 'npx lintamigo',
     provenance:
       'Deliberately constructed minimal reproduction, not a repo audit',
     version: beforeRun.report.version,
@@ -79,7 +85,7 @@ try {
   await writeFile(path.join(temporaryRoot, 'AGENTS.md'), before);
   const binDirectory = path.join(temporaryRoot, 'node_modules', '.bin');
   await mkdir(binDirectory, { recursive: true });
-  await symlink(cliPath, path.join(binDirectory, 'amigolint'));
+  await symlink(cliPath, path.join(binDirectory, 'lintamigo'));
   const rawVideo = path.join(temporaryRoot, 'launch.raw.mp4');
   const sourceTape = await readFile(path.join(launchRoot, 'demo.tape'), 'utf8');
   const tapePath = path.join(temporaryRoot, 'demo.tape');
@@ -97,7 +103,7 @@ try {
   );
   assert.equal(lintReport().status, 0);
 
-  const videoPath = path.join(launchRoot, 'amigolint-launch.mp4');
+  const videoPath = path.join(launchRoot, 'lintamigo-launch.mp4');
   run('ffmpeg', [
     '-hide_banner',
     '-loglevel',
@@ -127,7 +133,7 @@ try {
     'fps=8,scale=1088:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=64[p];[b][p]paletteuse=dither=bayer:bayer_scale=4',
     '-loop',
     '0',
-    path.join(launchRoot, 'amigolint-launch.gif'),
+    path.join(launchRoot, 'lintamigo-launch.gif'),
   ]);
   const duration = Number(
     run('ffprobe', [

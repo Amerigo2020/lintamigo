@@ -47,12 +47,66 @@ describe('inline suppression', () => {
     });
   });
 
-  it('ignores literal directives and allows file-level suppression after frontmatter', () => {
+  it('combines next-line directives from both names across blank lines', () => {
+    const doc = parseDoc(
+      'AGENTS.md',
+      [
+        '<!-- lintamigo-disable-next-line AL001 -->',
+        '',
+        '<!-- amigolint-disable-next-line dead-link -->',
+        '',
+        'Use `missing/file.ts` and [guide](missing/guide.md).',
+        'Use `missing/still-visible.ts`.',
+      ].join('\n'),
+    );
+    const findings: Finding[] = [
+      findingFor(doc.path, 5),
+      {
+        ...findingFor(doc.path, 5),
+        rule: 'dead-link',
+        code: 'AL006',
+        severity: 'warn',
+      },
+      findingFor(doc.path, 6),
+    ];
+
+    expect(applySuppressions(findings, [doc])).toEqual({
+      findings: [findings[2]],
+      suppressed: 2,
+    });
+  });
+
+  it('lets either alias enable a block disabled by the other alias', () => {
+    const doc = parseDoc(
+      'AGENTS.md',
+      [
+        '<!-- lintamigo-disable stale-path -->',
+        'Use `missing/suppressed.ts`.',
+        '<!-- amigolint-enable -->',
+        'Use `missing/visible.ts`.',
+        '<!-- amigolint-disable stale-path -->',
+        'Use `missing/also-suppressed.ts`.',
+        '<!-- lintamigo-enable -->',
+        'Use `missing/also-visible.ts`.',
+      ].join('\n'),
+    );
+    const findings = [2, 4, 6, 8].map((line) => findingFor(doc.path, line));
+
+    expect(applySuppressions(findings, [doc])).toEqual({
+      findings: [findings[1], findings[3]],
+      suppressed: 2,
+    });
+  });
+
+  it.each([
+    'amigolint',
+    'lintamigo',
+  ])('ignores literal %s directives and allows file-level suppression after frontmatter', (prefix) => {
     const codeDoc = parseDoc(
       'AGENTS.md',
       [
         '```md',
-        '<!-- amigolint-disable stale-path -->',
+        `<!-- ${prefix}-disable stale-path -->`,
         '```',
         'Use `missing/visible.ts`.',
       ].join('\n'),
@@ -63,22 +117,22 @@ describe('inline suppression', () => {
         '---',
         'alwaysApply: true',
         '---',
-        '<!-- amigolint-disable-file -->',
+        `<!-- ${prefix}-disable-file -->`,
         'Use `missing/suppressed.ts`.',
       ].join('\n'),
     );
     const inlineCodeDoc = parseDoc(
       'CLAUDE.md',
       [
-        '`<!-- amigolint-disable stale-path -->`',
+        `\`<!-- ${prefix}-disable stale-path -->\``,
         'Use `missing/also-visible.ts`.',
       ].join('\n'),
     );
     const nextLineLiteralDoc = parseDoc(
       'nested/AGENTS.md',
       [
-        '<!-- amigolint-disable-next-line stale-path -->',
-        '`<!-- amigolint-disable stale-path -->`',
+        `<!-- ${prefix}-disable-next-line stale-path -->`,
+        `\`<!-- ${prefix}-disable stale-path -->\``,
         'Use `missing/still-visible.ts`.',
       ].join('\n'),
     );

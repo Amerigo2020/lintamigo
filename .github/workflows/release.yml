@@ -55,6 +55,13 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Point the previous package to lintAmigo
+        if: github.ref_name == 'v0.1.1'
+        continue-on-error: true
+        run: npm deprecate 'amigolint@0.1.0' 'Renamed to lintAmigo. Install lintamigo or run npx lintamigo. Existing configuration and suppression comments remain supported.'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Create GitHub release notes
         run: gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes --title "$GITHUB_REF_NAME"
         env:

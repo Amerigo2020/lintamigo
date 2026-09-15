@@ -1,8 +1,8 @@
-# Early tester shortlist
+# Early tester shortlist — unused archive
 
-Prepared 2026-09-15. **Research and unsent drafts only.** These public repository owners have not agreed to test amigolint. The fit assessment comes from reading their instruction files, not from running amigolint against their projects or confirming defects.
+Prepared 2026-09-15. **Optional archive, unused; no outreach.** Amerigo chose a public launch and forum posts instead of personal tester invitations. The research and drafts below are retained for reference only and must not be sent as part of the launch. These public repository owners have not agreed to test lintAmigo. The fit assessment comes from reading their instruction files, not from running lintAmigo against their projects or confirming defects.
 
-Start with **@yicheng47**, **@VictorTomaili**, and **@anmoln7**: they cover a real application, instruction synchronization, and an existing documentation gate. The goal is useful feedback, including false positives; a response or star is not assumed.
+The original research priorities were **@yicheng47**, **@VictorTomaili**, and **@anmoln7**: they cover a real application, instruction synchronization, and an existing documentation gate. This ranking is archived, not an outreach task.
 
 For every candidate, the channel is **only an existing relevant conversation or an explicit invitation**. No posting destination has been selected or cleared. Check that destination's current contribution/community rules before posting. Do not open a promotional issue, PR, or unsolicited DM. The source links below establish technical fit, not permission to advertise.
 
@@ -12,9 +12,9 @@ GitHub repository metadata, the default-branch `AGENTS.md`, and its latest commi
 
 [Repository](https://github.com/yicheng47/runner) · [Instruction evidence](https://github.com/yicheng47/runner/blob/e37e7f7fabf07e027e9c2c30c8e84927601c584a/AGENTS.md) · Last push: 2026-09-14
 
-The agent guide maps Rust crates and documentation directories and lists Make validation commands. This is a concrete application repository with the kinds of path and command references amigolint checks.
+The agent guide maps Rust crates and documentation directories and lists Make validation commands. This is a concrete application repository with the kinds of path and command references lintAmigo checks.
 
-**Draft:** “How do you keep Runner's crate map and Make commands in AGENTS.md aligned as the app changes? I'm Amerigo, and I built [amigolint](https://github.com/Amerigo2020/amigolint) to check instruction files locally. Would you try `npx amigolint` from your Runner checkout and tell me whether its findings are useful or false positives? I'd especially value feedback on the Rust/Make setup.”
+**Draft:** “How do you keep Runner's crate map and Make commands in AGENTS.md aligned as the app changes? I'm Amerigo, and I built [lintAmigo](https://github.com/Amerigo2020/lintamigo) to check instruction files locally. Would you try `npx lintamigo` from your Runner checkout and tell me whether its findings are useful or false positives? I'd especially value feedback on the Rust/Make setup.”
 
 ## 2. @VictorTomaili — agent-cli — first priority
 
@@ -22,7 +22,7 @@ The agent guide maps Rust crates and documentation directories and lists Make va
 
 The project synchronizes agent instructions across tools. Its own guide distinguishes published-package commands from checkout commands and explicitly describes local-only, ignored documentation—useful cases for judging false positives.
 
-**Draft:** “When agent-cli synchronizes instructions, how do you check that the referenced commands and paths still make sense in the destination? I'm Amerigo, the author of [amigolint](https://github.com/Amerigo2020/amigolint). Would you run `npx amigolint` in your own checkout and share useful findings or false positives? Your distinction between installed-package docs and local-only files would be particularly helpful feedback.”
+**Draft:** “When agent-cli synchronizes instructions, how do you check that the referenced commands and paths still make sense in the destination? I'm Amerigo, the author of [lintAmigo](https://github.com/Amerigo2020/lintamigo). Would you run `npx lintamigo` in your own checkout and share useful findings or false positives? Your distinction between installed-package docs and local-only files would be particularly helpful feedback.”
 
 ## 3. @anmoln7 — agent-standard-oss — first priority
 
@@ -30,7 +30,7 @@ The project synchronizes agent instructions across tools. Its own guide distingu
 
 Its own agent guide documents a single source of truth, shell validation, an example instruction file, and `doc-gate-check`. This owner already addresses instruction drift and can assess overlap or missing value.
 
-**Draft:** “Does your existing doc gate cover the drift cases you actually encounter, or are there checks you'd still want? I'm Amerigo; I built [amigolint](https://github.com/Amerigo2020/amigolint), a local instruction-file linter. If you're interested, could you try `npx amigolint` in agent-standard-oss and tell me whether it adds anything useful or mostly overlaps? False positives around your examples would also help.”
+**Draft:** “Does your existing doc gate cover the drift cases you actually encounter, or are there checks you'd still want? I'm Amerigo; I built [lintAmigo](https://github.com/Amerigo2020/lintamigo), a local instruction-file linter. If you're interested, could you try `npx lintamigo` in agent-standard-oss and tell me whether it adds anything useful or mostly overlaps? False positives around your examples would also help.”
 
 ## 4. @mertkayacs — ReevesAgents
 
@@ -38,7 +38,7 @@ Its own agent guide documents a single source of truth, shell validation, an exa
 
 AGENTS.md is an operator guide for an agent-orchestration CLI, with command examples, local state paths, and links to translated guides. This differs from a conventional contributor guide and could expose noisy assumptions.
 
-**Draft:** “Do you check ReevesAgents' operator AGENTS.md automatically when commands or documentation move? I'm Amerigo, and I built [amigolint](https://github.com/Amerigo2020/amigolint). Would you try `npx amigolint` in your checkout and tell me whether it produces useful findings or noise on a guide aimed at operating the tool? I'm particularly interested in that distinction from ordinary contributor instructions.”
+**Draft:** “Do you check ReevesAgents' operator AGENTS.md automatically when commands or documentation move? I'm Amerigo, and I built [lintAmigo](https://github.com/Amerigo2020/lintamigo). Would you try `npx lintamigo` in your checkout and tell me whether it produces useful findings or noise on a guide aimed at operating the tool? I'm particularly interested in that distinction from ordinary contributor instructions.”
 
 ## 5. @KbWen — agentic-os
 
@@ -46,7 +46,7 @@ AGENTS.md is an operator guide for an agent-orchestration CLI, with command exam
 
 The root instructions refer to engineering/security rules, workflow files, generated context, and evidence gates. That mix makes path checks and heuristic precision relevant without implying any actual defect.
 
-**Draft:** “How do you validate references between agentic-os's root instructions, rules, and workflow files as they evolve? I'm Amerigo, the author of [amigolint](https://github.com/Amerigo2020/amigolint). Would you try `npx amigolint` on your checkout and share useful findings or false positives? Your generated and conditional context paths would be a valuable reality check for the linter's assumptions.”
+**Draft:** “How do you validate references between agentic-os's root instructions, rules, and workflow files as they evolve? I'm Amerigo, the author of [lintAmigo](https://github.com/Amerigo2020/lintamigo). Would you try `npx lintamigo` on your checkout and share useful findings or false positives? Your generated and conditional context paths would be a valuable reality check for the linter's assumptions.”
 
 ## 6. @Kulaxyz — self-learning-skills
 
@@ -54,7 +54,7 @@ The root instructions refer to engineering/security rules, workflow files, gener
 
 The portable AGENTS.md describes recording verified procedures and links to Claude skills and a Cursor rule. This is a relevant perspective on checks applied to instructions that grow over time.
 
-**Draft:** “Once a learned procedure is saved, how do you notice when its paths or commands become outdated? I'm Amerigo; I built [amigolint](https://github.com/Amerigo2020/amigolint) to check agent instruction files locally. Would you try `npx amigolint` in self-learning-skills and tell me which findings help and which are false positives? I'm curious whether linting fits your procedure-capture workflow.”
+**Draft:** “Once a learned procedure is saved, how do you notice when its paths or commands become outdated? I'm Amerigo; I built [lintAmigo](https://github.com/Amerigo2020/lintamigo) to check agent instruction files locally. Would you try `npx lintamigo` in self-learning-skills and tell me which findings help and which are false positives? I'm curious whether linting fits your procedure-capture workflow.”
 
 ## 7. @sohaibt — product-mode
 
@@ -62,7 +62,7 @@ The portable AGENTS.md describes recording verified procedures and links to Clau
 
 The instructions focus on product decisions, scope, assumptions, and outcomes. A prose-heavy guide is useful for evaluating whether optional vagueness and contradiction hints are meaningful or distracting.
 
-**Draft:** “Would a linter's wording hints help a product-focused agent guide, or mostly get in the way? I'm Amerigo, and I built [amigolint](https://github.com/Amerigo2020/amigolint). If you're interested, could you try `npx amigolint` in product-mode and tell me which findings are useful or false positives? Your decision-focused instructions are a good test of where heuristic advice should stay quiet.”
+**Draft:** “Would a linter's wording hints help a product-focused agent guide, or mostly get in the way? I'm Amerigo, and I built [lintAmigo](https://github.com/Amerigo2020/lintamigo). If you're interested, could you try `npx lintamigo` in product-mode and tell me which findings are useful or false positives? Your decision-focused instructions are a good test of where heuristic advice should stay quiet.”
 
 ## 8. @hexsprite — claude-agents-md
 
@@ -70,7 +70,7 @@ The instructions focus on product decisions, scope, assumptions, and outcomes. A
 
 The repository uses AGENTS.md as its source and describes generated, ignored CLAUDE.md plus hook and test paths. Good technical fit; recheck current activity before approaching.
 
-**Draft:** “How should a linter treat an AGENTS.md source when CLAUDE.md is generated or virtualized by the loader? I'm Amerigo, the author of [amigolint](https://github.com/Amerigo2020/amigolint). Would you try `npx amigolint` in your plugin checkout and report useful findings or false positives? Your loading model would help me check that the tool's assumptions match real usage.”
+**Draft:** “How should a linter treat an AGENTS.md source when CLAUDE.md is generated or virtualized by the loader? I'm Amerigo, the author of [lintAmigo](https://github.com/Amerigo2020/lintamigo). Would you try `npx lintamigo` in your plugin checkout and report useful findings or false positives? Your loading model would help me check that the tool's assumptions match real usage.”
 
 ## 9. @Pierry — harness-kit
 
@@ -78,7 +78,7 @@ The repository uses AGENTS.md as its source and describes generated, ignored CLA
 
 AGENTS.md is a registry connecting agent definitions, skills, commands, and generated runtime paths. The project combines deterministic gates and evals. Recheck current activity before approaching.
 
-**Draft:** “How do you keep harness-kit's agent registry aligned with its skill, command, and runtime paths? I'm Amerigo; I built [amigolint](https://github.com/Amerigo2020/amigolint), a local instruction-file linter. Would you try `npx amigolint` from your checkout and tell me whether its findings are useful or false positives? Your split between checked-in definitions and generated runtime files is especially relevant.”
+**Draft:** “How do you keep harness-kit's agent registry aligned with its skill, command, and runtime paths? I'm Amerigo; I built [lintAmigo](https://github.com/Amerigo2020/lintamigo), a local instruction-file linter. Would you try `npx lintamigo` from your checkout and tell me whether its findings are useful or false positives? Your split between checked-in definitions and generated runtime files is especially relevant.”
 
 ## 10. @shanirsh — prismodev
 
@@ -86,8 +86,8 @@ AGENTS.md is a registry connecting agent definitions, skills, commands, and gene
 
 Its guide references generated context summaries and guardrails, keeps terminal output concise, and lists a validation command. This offers a context-management perspective. Recheck current activity before approaching; dated working agreements are not treated here as confirmed defects.
 
-**Draft:** “Where do you draw the line between useful context checks and warnings about deliberately generated files? I'm Amerigo, and I built [amigolint](https://github.com/Amerigo2020/amigolint). If you're interested, could you try `npx amigolint` in prismodev and tell me which findings are useful or false positives? Your generated context summaries would be a helpful perspective on that boundary.”
+**Draft:** “Where do you draw the line between useful context checks and warnings about deliberately generated files? I'm Amerigo, and I built [lintAmigo](https://github.com/Amerigo2020/lintamigo). If you're interested, could you try `npx lintamigo` in prismodev and tell me which findings are useful or false positives? Your generated context summaries would be a helpful perspective on that boundary.”
 
 ## Record feedback
 
-After someone opts in, record the tested amigolint version, their repository commit, the rule and finding they discuss, and their judgment: useful, false positive, or uncertain. Ask separately before quoting a person or publishing their result. Start with the three priority candidates; adapt later drafts to what the first conversations teach us.
+Use the active [feedback guide](feedback.md) to record voluntary responses from public launch posts. The drafts above remain unused unless Amerigo explicitly re-enables personal outreach in a future task.

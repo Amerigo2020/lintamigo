@@ -7,14 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-15
+
+### Migration
+
+- Renamed the product to **lintAmigo**, the npm package and CLI to `lintamigo`,
+  and the repository to `Amerigo2020/lintamigo`
+- Replace `npx amigolint` with `npx lintamigo`; switch project dependencies and
+  API imports from `amigolint` to `lintamigo`
+- The new package also installs an `amigolint` binary alias for existing
+  local scripts; the old npm package remains separate
+- New configuration uses `lintamigo.config.json`, `.lintamigorc.json`, or
+  `package.json#lintamigo`; legacy amigolint configuration names and suppression
+  comments remain supported, with new configuration sources taking precedence
+- New suppression comments use the `lintamigo-` prefix; rule IDs, CLI flags,
+  and the public `lint()` API remain unchanged
+- `lintamigo init` refuses to shadow settings in any recognized new or legacy
+  configuration file or package key
+
 ### Fixed
 
 - Study reports distinguish automated findings from confirmed defects, label
   artifact timestamps accurately, and retain methodology notes when regenerated
-- Running amigolint in its own source checkout excludes the deliberately
+- Running lintAmigo in its own source checkout excludes the deliberately
   broken test fixtures and demo; the instruction-lint CI workflow now checks
   default repository discovery instead of only the root `AGENTS.md`
-- A UTF-8 byte order mark in `package.json`, `amigolint.config.json` or a
+- A UTF-8 byte order mark in `package.json`, `lintamigo.config.json` or a
   frontmatter block no longer aborts the run or produces bogus frontmatter
   errors
 - Explicit paths that do not exist now exit with code 2 and a message instead
@@ -105,5 +123,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Split `amigolint stats` into always-loaded and on-demand file/token totals so
   lazily loaded instructions no longer inflate startup context estimates
 
-[Unreleased]: https://github.com/Amerigo2020/amigolint/commits/main
-[0.1.0]: https://github.com/Amerigo2020/amigolint/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Amerigo2020/lintamigo/commits/main
+[0.1.1]: https://github.com/Amerigo2020/lintamigo/compare/v0.1.0...main
+[0.1.0]: https://github.com/Amerigo2020/lintamigo/releases/tag/v0.1.0

@@ -1,16 +1,17 @@
 # LinkedIn launch draft
 
-Status: ready for review; not posted.
+Status: draft for the lintAmigo rename; not posted. Verify the public
+`lintamigo@0.1.1` install and renamed repository before posting.
 Attach the MP4 linked from [the launch demo](../demo/launch/README.md).
 The video is a controlled reproduction with real CLI output.
 
 ## Post
 
-Im Code wird ein Test-Script umbenannt. In der CLAUDE.md steht noch der alte
+Im Code wird ein Test-Script umbenannt. In der AGENTS.md steht noch der alte
 Befehl. Der Coding-Agent bekommt also eine Anleitung, die nicht mehr zum
 Projekt passt.
 
-Für solche Fälle habe ich amigolint gebaut.
+Für solche Fälle habe ich lintAmigo gebaut.
 
 Das kleine Open-Source-Tool prüft CLAUDE.md, AGENTS.md, Cursor-Regeln und
 Copilot-Anweisungen gegen das Repository: Existieren die referenzierten
@@ -20,7 +21,7 @@ Zugangsdaten in einer Anweisung?
 Es läuft lokal, ohne LLM oder API-Key. Zum Ausprobieren im eigenen
 Projektordner:
 
-`npx amigolint`
+`npx lintamigo`
 
 Im Video zeige ich an einem kleinen Beispiel einen veralteten Befehl, die
 Meldung und die anschließende Korrektur. Der Code ist unter MIT-Lizenz
@@ -31,7 +32,7 @@ bereits nutzen: Welche Meldung hilft euch, und wo liegt das Tool daneben?
 Für einen Fehlerbericht reichen die betroffene Regel und ein kleines
 Beispiel ohne Zugangsdaten oder interne Projektinhalte.
 
-https://github.com/Amerigo2020/amigolint
+https://github.com/Amerigo2020/lintamigo
 
 Wenn es euch hilft, freue ich mich über einen Star.
 
@@ -39,6 +40,7 @@ Wenn es euch hilft, freue ich mich über einen Star.
 
 - Publish the reviewed repository changes first, so cloning the repo includes
   the corrected default configuration and qualified study documentation.
+- Verify `npx --yes lintamigo@0.1.1 --version` in a fresh environment.
 - Attach the recorded demo, not the deliberately noisy all-rules example.
 - Keep this description of the video as a small example; do not describe it
   as a finding in a third-party production repository.

@@ -6,7 +6,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Command, CommanderError } from 'commander';
-import { loadConfig } from './config.js';
+import { findConfigSource, loadConfig } from './config.js';
 import { discover, findRepoRoot } from './discover.js';
 import { documentLoadMode } from './doc-groups.js';
 import { lint } from './index.js';
@@ -35,7 +35,7 @@ interface CliOptions {
 
 export async function main(argv: string[] = process.argv): Promise<void> {
   const program = new Command()
-    .name('amigolint')
+    .name('lintamigo')
     .usage('[options] [paths...]')
     .description(
       'Lint your CLAUDE.md, AGENTS.md, Cursor rules and Copilot instructions.',
@@ -75,10 +75,10 @@ export async function main(argv: string[] = process.argv): Promise<void> {
     });
   program
     .command('init')
-    .description('write an amigolint.config.json with every rule default')
+    .description('write a lintamigo.config.json with every rule default')
     .action(async () => {
       await initializeConfig(process.cwd());
-      process.stdout.write('Created `amigolint.config.json`\n');
+      process.stdout.write('Created `lintamigo.config.json`\n');
     });
 
   try {
@@ -277,14 +277,18 @@ async function formatStatsTable(cwd: string): Promise<string> {
 
 async function initializeConfig(cwd: string): Promise<void> {
   const root = await findRepoRoot(cwd);
-  const target = path.join(root, 'amigolint.config.json');
+  const existing = await findConfigSource(root);
+  if (existing !== undefined) {
+    throw new Error(`Configuration \`${existing}\` already exists`);
+  }
+  const target = path.join(root, 'lintamigo.config.json');
   const source = initialConfigSource();
 
   try {
     await writeFile(target, source, { encoding: 'utf8', flag: 'wx' });
   } catch (error) {
     if (isFileExistsError(error)) {
-      throw new Error('`amigolint.config.json` already exists');
+      throw new Error('`lintamigo.config.json` already exists');
     }
     throw error;
   }
@@ -299,7 +303,7 @@ function initialConfigSource(): string {
   ]);
   return [
     '{',
-    '  "$schema": "https://raw.githubusercontent.com/Amerigo2020/amigolint/main/schema.json",',
+    '  "$schema": "https://raw.githubusercontent.com/Amerigo2020/lintamigo/main/schema.json",',
     '  "rules": {',
     ...entries,
     '  }',
@@ -387,7 +391,7 @@ function isDirectExecution(): boolean {
 if (isDirectExecution()) {
   main().catch((error: unknown) => {
     const message = error instanceof Error ? error.message : String(error);
-    process.stderr.write(`amigolint: ${message}\n`);
+    process.stderr.write(`lintamigo: ${message}\n`);
     process.exitCode = 2;
   });
 }

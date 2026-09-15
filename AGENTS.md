@@ -1,6 +1,8 @@
-# AGENTS.md – amigolint
+# AGENTS.md – lintAmigo
 
-You are working on **amigolint**, a CLI linter for AI agent instruction files (CLAUDE.md, AGENTS.md, Cursor rules, Copilot instructions). The full specification is in `docs/SPEC.md`. Read it before any task. When the spec and this file disagree, the spec wins; say so in your summary.
+You are working on **lintAmigo**, a CLI linter for AI agent instruction files (CLAUDE.md, AGENTS.md, Cursor rules, Copilot instructions). The full specification is in `docs/SPEC.md`. Read it before any task. When the spec and this file disagree, the spec wins; say so in your summary.
+
+Use **lintAmigo** for the product name and `lintamigo` for the npm package, CLI, and repository slug. Preserve supported legacy `amigolint` configuration and suppression names.
 
 ## Commands
 

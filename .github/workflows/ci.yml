@@ -64,10 +64,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          pack_dir="$(mktemp -d "$RUNNER_TEMP/amigolint-pack.XXXXXX")"
-          unpack_dir="$(mktemp -d "$RUNNER_TEMP/amigolint-unpack.XXXXXX")"
-          install_dir="$(mktemp -d "$RUNNER_TEMP/amigolint-install.XXXXXX")"
-          pack_path="$pack_dir/amigolint.tgz"
+          pack_dir="$(mktemp -d "$RUNNER_TEMP/lintamigo-pack.XXXXXX")"
+          unpack_dir="$(mktemp -d "$RUNNER_TEMP/lintamigo-unpack.XXXXXX")"
+          install_dir="$(mktemp -d "$RUNNER_TEMP/lintamigo-install.XXXXXX")"
+          pack_path="$pack_dir/lintamigo.tgz"
 
           pnpm pack --out "$pack_path"
           # On Windows, $RUNNER_TEMP is a native path ("D:\a\_temp\...");
@@ -119,6 +119,7 @@ jobs:
             cd "$install_dir"
             npm init --yes >/dev/null
             npm install "$pack_path"
+            test -x node_modules/.bin/lintamigo
             test -x node_modules/.bin/amigolint
 
             medium_dir="$install_dir/medium-repo"
@@ -143,7 +144,7 @@ jobs:
           NODE
 
             started_at="$(node -e 'process.stdout.write(String(Date.now()))')"
-            npx --no-install amigolint "$medium_dir" --no-color >/dev/null
+            npx --no-install lintamigo "$medium_dir" --no-color >/dev/null
             finished_at="$(node -e 'process.stdout.write(String(Date.now()))')"
             elapsed_ms="$((finished_at - started_at))"
             echo "Cold npx lint time: ${elapsed_ms} ms"
@@ -152,7 +153,8 @@ jobs:
               exit 1
             fi
 
-            package_version="$(node -p "require('./node_modules/amigolint/package.json').version")"
-            test "$(npx amigolint --version)" = "$package_version"
-            node --input-type=module -e "import('amigolint').then(({ lint }) => { if (typeof lint !== 'function') process.exit(1) })"
+            package_version="$(node -p "require('./node_modules/lintamigo/package.json').version")"
+            test "$(npx --no-install lintamigo --version)" = "$package_version"
+            test "$(npx --no-install amigolint --version)" = "$package_version"
+            node --input-type=module -e "import('lintamigo').then(({ lint }) => { if (typeof lint !== 'function') process.exit(1) })"
           )

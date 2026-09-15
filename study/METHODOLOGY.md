@@ -1,9 +1,11 @@
 # Interpreting the saved repository scan
 
-This directory contains a saved automated scan of 100 selected public GitHub
+This directory retains a pre-rename automated scan of 100 selected public GitHub
 repositories. [results.json](results.json) is the stored data;
 [RESULTS.md](RESULTS.md) presents its counts. The saved artifact timestamp is
-2026-09-02T22:54:27.103Z and the data schema version is 2.
+2026-09-02T22:54:27.103Z and the data schema version is 2. The project was
+then named amigolint; it is now lintAmigo. Renaming the project does not
+change the saved observations or identify the historical linter version.
 
 ## What the numbers mean
 
@@ -50,7 +52,8 @@ artifacts alone.
 [scripts/study.ts](../scripts/study.ts) shallow-clones each pending repository's
 default branch and calls `lint({ root: repositoryRoot, config: {} })`.
 Passing an empty configuration applies the linter's defaults and bypasses
-repository-specific amigolint configuration, including custom exclusions
+repository-specific lintAmigo configuration, including legacy amigolint
+configuration, custom exclusions
 and rule settings. Standard discovery exclusions still apply, but deliberate
 examples and test fixtures can be scanned. Repositories are not built and
 their documented commands are not executed to confirm findings.

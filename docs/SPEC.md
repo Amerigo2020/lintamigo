@@ -1,15 +1,24 @@
-# amigolint – Specification
+# lintAmigo – Specification
 
 > Lint your CLAUDE.md, AGENTS.md, Cursor rules and Copilot instructions.
 > Catch stale paths, dead commands and leaked secrets before your agent reads them.
 
-Status: v0.1 spec, 2026-09-02. Owner: Amerigo Velletti. Implementation: Codex. Review: Claude.
+Status: v0.1 spec, updated for the v0.1.1 rename on 2026-09-15. Owner: Amerigo Velletti. Implementation: Codex. Review: Claude.
+
+Product name: **lintAmigo**. npm package and CLI: `lintamigo`. GitHub repository:
+`Amerigo2020/lintamigo`. The former `amigolint` configuration and suppression
+names remain accepted for migration; new output and generated configuration
+use `lintamigo`.
+
+The `lintamigo` package also exposes an `amigolint` binary alias for existing
+local scripts. Package dependencies and programmatic imports use `lintamigo`;
+the old npm package remains a separate historical artifact.
 
 ## 1. Problem
 
 Agent instruction files (CLAUDE.md, AGENTS.md, `.cursor/rules/*.mdc`, `.github/copilot-instructions.md`) rot faster than code. Nobody runs them, so nothing fails when a referenced file is renamed, a script is removed, or the file grows to 10k tokens that get injected into every request. Real example from the author's own repo on 2026-09-02: `CLAUDE.md` referenced six `.claude/skills/gitnexus/*/SKILL.md` files that did not exist.
 
-amigolint is `eslint` for those files: fast, zero-config, no LLM required, runs in CI.
+lintAmigo is `eslint` for those files: fast, zero-config, no LLM required, runs in CI.
 
 ## 2. Non-goals (v0.x)
 
@@ -33,7 +42,7 @@ amigolint is `eslint` for those files: fast, zero-config, no LLM required, runs 
 | Lint/format | `biome` | matches author's stack |
 | Tokens | heuristic `Math.ceil(chars / 3.6)` labelled "≈" in output | exact tokenizer is 2 MB; add `--exact-tokens` via optional `gpt-tokenizer` in v0.2 |
 
-Hard rule: install size under 2 MB, cold `npx amigolint` under 5 s on a 10k-file repo. Measure in CI.
+Hard rule: install size under 2 MB, cold `npx lintamigo` under 5 s on a 10k-file repo. Measure in CI.
 
 ## 4. Discovery: which files are linted
 
@@ -56,7 +65,7 @@ targets or general file/directory-index entries and cannot provide suggestions.
 
 Nested `CLAUDE.md`/`AGENTS.md` under `.claude/worktrees/**` are excluded by default (they are copies).
 
-The user can pass explicit paths: `amigolint CLAUDE.md docs/AGENTS.md`.
+The user can pass explicit paths: `lintamigo CLAUDE.md docs/AGENTS.md`.
 
 ## 5. Parsing model
 
@@ -91,7 +100,7 @@ interface Rule {
   id: string;                 // kebab-case, e.g. 'stale-path'
   code: string;               // 'AL001'
   defaultSeverity: 'error' | 'warn' | 'info' | 'off';
-  docs: string;               // one paragraph, shown by `amigolint rules`
+  docs: string;               // one paragraph, shown by `lintamigo rules`
   check(ctx: RuleContext): Finding[];
 }
 
@@ -242,18 +251,33 @@ Paths containing `/Users/<name>/` or `/home/<name>/` or `C:\Users\`. Message: "M
 
 ## 7. Inline suppression
 
-- `<!-- amigolint-disable-next-line stale-path -->` suppresses the next non-blank line.
-- `<!-- amigolint-disable stale-path, dead-link -->` from here to end of file or until `<!-- amigolint-enable -->`.
-- `<!-- amigolint-disable-file -->` at top.
+- `<!-- lintamigo-disable-next-line stale-path -->` suppresses the next non-blank line.
+- `<!-- lintamigo-disable stale-path, dead-link -->` from here to end of file or until `<!-- lintamigo-enable -->`.
+- `<!-- lintamigo-disable-file -->` at top.
 Suppressed findings are counted and shown in the summary line ("3 suppressed").
+
+The legacy `amigolint-` prefix remains accepted for all four directives with
+the same behavior. New examples and generated content use `lintamigo-`.
 
 ## 8. Configuration
 
-Lookup order: `--config <path>`, `amigolint.config.json`, `.amigolintrc.json`, `package.json#amigolint`. Merged over defaults. Schema (also shipped as `schema.json` for editor completion):
+Lookup order, first available source wins:
+
+1. Explicit `--config <path>`
+2. `lintamigo.config.json`
+3. `.lintamigorc.json`
+4. `package.json#lintamigo`
+5. Legacy `amigolint.config.json`
+6. Legacy `.amigolintrc.json`
+7. Legacy `package.json#amigolint`
+
+Merge only the selected source over defaults, not multiple sources together.
+New names take precedence over every legacy source. Schema (also shipped as
+`schema.json` for editor completion):
 
 ```jsonc
 {
-  "$schema": "https://raw.githubusercontent.com/Amerigo2020/amigolint/main/schema.json",
+  "$schema": "https://raw.githubusercontent.com/Amerigo2020/lintamigo/main/schema.json",
   "include": ["docs/agents/*.md"],          // additional globs
   "exclude": ["**/fixtures/**"],
   "rules": {
@@ -266,12 +290,15 @@ Lookup order: `--config <path>`, `amigolint.config.json`, `.amigolintrc.json`, `
 }
 ```
 
-`amigolint init` writes a minimal config with all rules at default and a comment per rule.
+`lintamigo init` writes `lintamigo.config.json` with all rules at default and
+a comment per rule. Refuse to create it when any recognized new or legacy
+configuration file or package key already exists, to prevent overwriting or
+shadowing existing settings.
 
 ## 9. CLI
 
 ```
-amigolint [paths...]                 lint (default command)
+lintamigo [paths...]                 lint (default command)
   --format pretty|json|sarif|github  default pretty; github emits ::error/::warning workflow commands
   --config <file>
   --rule <id>[,<id>]                 only run these rules
@@ -279,10 +306,10 @@ amigolint [paths...]                 lint (default command)
   --check-urls
   --quiet                            errors only
   --no-color
-amigolint init                       write amigolint.config.json
-amigolint rules [--format md]        table of rules, codes, default severity, one-line docs
-amigolint stats                      per-agent always-loaded/on-demand file and token totals, largest file
-amigolint --version / --help
+lintamigo init                       write lintamigo.config.json
+lintamigo rules [--format md]        table of rules, codes, default severity, one-line docs
+lintamigo stats                      per-agent always-loaded/on-demand file and token totals, largest file
+lintamigo --version / --help
 ```
 
 Exit codes: `0` no errors (warnings allowed unless `--max-warnings`), `1` findings at error level, `2` runtime/config error.
@@ -330,7 +357,7 @@ Programmatic API is public and documented so editors / other tools can embed it.
 
 ### M0 – Skeleton (0.5 day)
 - Repo scaffold: pnpm, TS strict, biome, vitest, tsdown, `bin` entry, GitHub Actions CI (node 20 + 22, macOS + ubuntu), MIT license, `CHANGELOG.md`.
-- `amigolint --version` works via `npx` from a packed tarball (`pnpm pack` in CI, install into temp dir, run).
+- `lintamigo --version` works via `npx` from a packed tarball (`pnpm pack` in CI, install into temp dir, run).
 - Acceptance: CI green; `pnpm build` produces a single `dist/cli.mjs` under 200 kB.
 
 ### M1 – Core: discovery, parser, repo index, AL001, AL002, pretty + json output (2 days)
@@ -349,7 +376,10 @@ Programmatic API is public and documented so editors / other tools can embed it.
 - Install size measured in CI and printed.
 - README per LAUNCH.md checklist; `examples/broken-repo/` with a deliberately bad CLAUDE.md; `vhs` tape in `demo/demo.tape`; GIF committed.
 - `scripts/study.ts` for the "State of CLAUDE.md" study (clone 100 repos shallow, run lint, aggregate to `study/results.json` + markdown table).
-- `v0.1.0` tagged, `npm publish --provenance` via GitHub Actions on tag.
+- `v0.1.1` tagged, `lintamigo` published with `npm publish --provenance` via GitHub Actions on tag.
+- Rename acceptance: the package, binary, README, API import, schemas, reports,
+  and launch assets use the new identity; config discovery follows §8 and
+  legacy suppression comments retain their behavior from §7.
 
 ## 12. Demo (vhs tape)
 
@@ -359,9 +389,9 @@ Set FontSize 16
 Set Width 1100
 Set Height 600
 Set Theme "Catppuccin Mocha"
-Type "npx amigolint" Sleep 500ms Enter
+Type "npx lintamigo" Sleep 500ms Enter
 Sleep 4s
-Type "npx amigolint stats" Sleep 500ms Enter
+Type "npx lintamigo stats" Sleep 500ms Enter
 Sleep 3s
 ```
 

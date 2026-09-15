@@ -6,11 +6,15 @@ interface SuppressionIndex {
   rulesByLine: Map<number, ReadonlySet<string>>;
 }
 
-const disableFilePattern = /^\s*<!--\s*amigolint-disable-file\s*-->\s*$/i;
-const nextLinePattern = /<!--\s*amigolint-disable-next-line\s+([^>]*?)\s*-->/i;
-const disablePattern = /<!--\s*amigolint-disable\s+([^>]*?)\s*-->/i;
-const enablePattern = /<!--\s*amigolint-enable\s*-->/i;
-const anyDirectivePattern = /<!--\s*amigolint-(?:disable|enable)/i;
+const disableFilePattern =
+  /^\s*<!--\s*(?:lintamigo|amigolint)-disable-file\s*-->\s*$/i;
+const nextLinePattern =
+  /<!--\s*(?:lintamigo|amigolint)-disable-next-line\s+([^>]*?)\s*-->/i;
+const disablePattern =
+  /<!--\s*(?:lintamigo|amigolint)-disable\s+([^>]*?)\s*-->/i;
+const enablePattern = /<!--\s*(?:lintamigo|amigolint)-enable\s*-->/i;
+const anyDirectivePattern =
+  /<!--\s*(?:lintamigo|amigolint)-(?:disable|enable)/i;
 
 export function applySuppressions(
   findings: readonly Finding[],

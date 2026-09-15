@@ -8,7 +8,7 @@ const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
 const exampleRoot = path.join(repositoryRoot, 'examples', 'broken-repo');
 const cliPath = path.join(repositoryRoot, 'dist', 'cli.mjs');
 
-const temporaryRoot = await mkdtemp(path.join(tmpdir(), 'amigolint-demo-'));
+const temporaryRoot = await mkdtemp(path.join(tmpdir(), 'lintamigo-demo-'));
 
 try {
   await cp(exampleRoot, temporaryRoot, { recursive: true });

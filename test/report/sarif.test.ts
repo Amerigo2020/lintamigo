@@ -109,7 +109,7 @@ describe('formatSarif', () => {
       'https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json',
     );
     expect(sarif.version).toBe('2.1.0');
-    expect(run.tool.driver.name).toBe('amigolint');
+    expect(run.tool.driver.name).toBe('lintamigo');
     expect(run.tool.driver.semanticVersion).toBe(report.version);
     expect(run.tool.driver.rules).toHaveLength(rules.length);
     expect(run.tool.driver.rules.map(({ id, name }) => ({ id, name }))).toEqual(

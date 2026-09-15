@@ -4,7 +4,7 @@ import type { Report } from './types.js';
 
 const SARIF_SCHEMA_URI =
   'https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json';
-const INFORMATION_URI = 'https://github.com/Amerigo2020/amigolint';
+const INFORMATION_URI = 'https://github.com/Amerigo2020/lintamigo';
 
 type SarifLevel = 'none' | 'note' | 'warning' | 'error';
 
@@ -19,7 +19,7 @@ export function formatSarif(report: Report): string {
       {
         tool: {
           driver: {
-            name: 'amigolint',
+            name: 'lintamigo',
             semanticVersion: report.version,
             informationUri: INFORMATION_URI,
             rules: rules.map((rule) => ({

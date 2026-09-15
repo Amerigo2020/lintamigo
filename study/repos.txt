@@ -1,4 +1,5 @@
 # Saved sample of 100 selected public GitHub repositories for the agent-instruction study.
+# Collected before the amigolint to lintAmigo rename; repository entries are historical and unchanged.
 # The original selection note records 2026-09-02 and TypeScript, JavaScript, Python, Go, and Rust repositories with CLAUDE.md or AGENTS.md.
 # Search responses and star counts were not retained; no global ranking or star threshold is asserted here.
 # See study/METHODOLOGY.md for interpretation and rerun limitations.

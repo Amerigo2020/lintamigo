@@ -1,5 +1,5 @@
 {
-  "name": "amigolint-broken-example",
+  "name": "lintamigo-broken-example",
   "private": true,
   "scripts": {
     "build": "tsc",

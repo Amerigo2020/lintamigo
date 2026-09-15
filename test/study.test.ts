@@ -130,6 +130,7 @@ describe('study aggregation', () => {
     expect(markdown).toContain('no recorded manual validation');
     expect(markdown).toContain('A flag is not a confirmed defect');
     expect(markdown).toContain('includes every reported severity');
+    expect(markdown).toContain('repository-specific lintAmigo configuration');
     expect(markdown).toContain(
       '`pnpm study` resumes saved records; it does not rescan completed repositories',
     );
@@ -141,7 +142,7 @@ describe('study aggregation', () => {
 
 describe('study runner', () => {
   it('resumes, runs sequentially, checkpoints failures, and stores only aggregate secret data', async () => {
-    const root = await mkdtemp(path.join(tmpdir(), 'amigolint-study-test-'));
+    const root = await mkdtemp(path.join(tmpdir(), 'lintamigo-study-test-'));
     temporaryDirectories.push(root);
     const repositoryListPath = path.join(root, 'repos.txt');
     const resultsPath = path.join(root, 'results.json');
@@ -285,7 +286,7 @@ describe('study runner', () => {
   });
 
   it('separates stale-rule info findings from errors reported by other rules', async () => {
-    const root = await mkdtemp(path.join(tmpdir(), 'amigolint-study-test-'));
+    const root = await mkdtemp(path.join(tmpdir(), 'lintamigo-study-test-'));
     temporaryDirectories.push(root);
     const repositoryListPath = path.join(root, 'repos.txt');
     const resultsPath = path.join(root, 'results.json');
@@ -369,7 +370,7 @@ describe('study runner', () => {
   });
 
   it('rejects schema version 1 with a clear version message', async () => {
-    const root = await mkdtemp(path.join(tmpdir(), 'amigolint-study-test-'));
+    const root = await mkdtemp(path.join(tmpdir(), 'lintamigo-study-test-'));
     temporaryDirectories.push(root);
     const repositoryListPath = path.join(root, 'repos.txt');
     const resultsPath = path.join(root, 'results.json');
